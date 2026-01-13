@@ -1,0 +1,102 @@
+/* Global animations */
+@layer utilities {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Shimmer sweep and stars */
+  @keyframes shimmer-move {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(120%); }
+  }
+
+  @keyframes shimmer-stars {
+    0% { opacity: 0; transform: translateX(-30%) scale(0.8); }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(30%) scale(1); }
+  }
+
+  /* Floating characters animation */
+  @keyframes floatY {
+    0% { transform: translateY(40px) rotate(0deg); opacity: 0.1; }
+    25% { transform: translateY(-10px) rotate(3deg); opacity: 0.16; }
+    50% { transform: translateY(-30px) rotate(5deg); opacity: 0.2; }
+    75% { transform: translateY(-10px) rotate(3deg); opacity: 0.16; }
+    100% { transform: translateY(40px) rotate(0deg); opacity: 0.1; }
+  }
+
+  /* Blink animation for cursor */
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+
+  .animate-blink {
+    animation: blink 1s step-start infinite;
+  }
+}
+
+@layer components {
+  /* Shimmer effects */
+  .shimmer-light {
+    @apply absolute top-0 w-2/5 h-full pointer-events-none;
+    left: -120%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    filter: blur(2px);
+    animation: shimmer-move 1.4s ease-in-out infinite;
+    animation-play-state: paused;
+    opacity: 0;
+    mix-blend-mode: screen;
+  }
+
+  .shimmer-stars {
+    @apply absolute inset-0 pointer-events-none;
+    background-image:
+      radial-gradient(4px 4px at 10% 40%, rgba(255,255,255,0.55), transparent 60%),
+      radial-gradient(3px 3px at 35% 60%, rgba(255,255,255,0.5), transparent 60%),
+      radial-gradient(2px 2px at 60% 30%, rgba(255,255,255,0.45), transparent 60%),
+      radial-gradient(3px 3px at 80% 70%, rgba(255,255,255,0.4), transparent 60%);
+    opacity: 0;
+    animation: shimmer-stars 1.4s ease-in-out infinite;
+    animation-play-state: paused;
+    mix-blend-mode: screen;
+  }
+}
+
+/* Group hover shimmer effects - cannot use @apply with group */
+.group:hover .shimmer-light,
+.group:hover .shimmer-stars {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+.group:not(:hover) .shimmer-light,
+.group:not(:hover) .shimmer-stars {
+  opacity: 0;
+}
+

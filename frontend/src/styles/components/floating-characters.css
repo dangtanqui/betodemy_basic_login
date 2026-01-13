@@ -1,0 +1,12 @@
+/* Floating characters component styles */
+@layer components {
+  .floating-container {
+    @apply fixed inset-0 pointer-events-none overflow-hidden;
+  }
+
+  .floating-char {
+    @apply absolute text-slate-600/50 dark:text-white/35 text-7xl font-bold select-none;
+    filter: drop-shadow(0 0 15px rgba(255,255,255,0.15));
+  }
+}
+

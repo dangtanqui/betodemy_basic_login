@@ -1,0 +1,19 @@
+/* FacebookCallback page styles */
+@layer components {
+  .fb-callback-page {
+    @apply min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-violet-800 to-purple-900;
+  }
+
+  .fb-callback-content {
+    @apply text-white text-center;
+  }
+
+  .fb-callback-spinner {
+    @apply animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500 mx-auto mb-4;
+  }
+
+  .fb-callback-text {
+    @apply text-white;
+  }
+}
+

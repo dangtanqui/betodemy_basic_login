@@ -8,7 +8,9 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
+    origin: process.env.CROS_ORIGIN 
+      ? process.env.CROS_ORIGIN.split(',').map(origin => origin.trim())
+      : ['http://localhost:5173', 'http://localhost:3000'],
     credentials: true,
   });
 
@@ -19,7 +21,6 @@ async function bootstrap() {
     }),
   );
 
-  // Serve uploaded files statically
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });

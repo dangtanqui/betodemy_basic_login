@@ -23,28 +23,26 @@ export default function PasswordStrength({ password }: PasswordStrengthProps) {
 
   if (!password) return null
 
+  const getValueClass = () => {
+    if (strength.level <= 2) return 'password-strength-value-weak'
+    if (strength.level <= 3) return 'password-strength-value-medium'
+    return 'password-strength-value-strong'
+  }
+
   return (
-    <div className="space-y-1">
-      <div className="flex justify-between text-sm">
-        <span className="text-white/60">Password strength</span>
-        <span
-          className={`font-medium ${
-            strength.level <= 2
-              ? 'text-red-400'
-              : strength.level <= 3
-              ? 'text-yellow-400'
-              : 'text-green-400'
-          }`}
-        >
+    <div className="password-strength">
+      <div className="password-strength-header">
+        <span className="password-strength-label">Password strength</span>
+        <span className={getValueClass()}>
           {strength.label}
         </span>
       </div>
-      <div className="flex gap-1">
+      <div className="password-strength-bar">
         {[1, 2, 3, 4, 5].map((segment) => (
           <div
             key={segment}
-            className={`h-1 flex-1 rounded-full transition-colors ${
-              segment <= strength.level ? strength.color : 'bg-white/10'
+            className={`password-strength-segment ${
+              segment <= strength.level ? strength.color : 'password-strength-segment-inactive'
             }`}
           />
         ))}

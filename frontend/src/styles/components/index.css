@@ -1,0 +1,8 @@
+/* Component styles barrel file */
+@import './button.css';
+@import './input.css';
+@import './social-button.css';
+@import './header.css';
+@import './password-strength.css';
+@import './floating-characters.css';
+

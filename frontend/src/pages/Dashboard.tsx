@@ -120,20 +120,16 @@ export default function Dashboard() {
 
   if (isLoading || !user) {
     return (
-      <div
-        className={`min-h-screen bg-gradient-to-br relative overflow-hidden ${
-          isDark ? 'from-purple-900 via-violet-900 to-purple-950' : 'from-[#e5e8ff] via-[#ede7ff] to-[#f7e9f6]'
-        }`}
-      >
+      <div className={`dashboard-page ${isDark ? 'dashboard-page-dark' : 'dashboard-page-light'}`}>
         <FloatingCharacters />
         <div className="relative z-10 min-h-screen flex flex-col max-w-4xl mx-auto">
           <Header showAvatar user={user || undefined} />
           <div className="flex-1 px-4 pb-10 flex flex-col gap-6 justify-center">
-            <div className="bg-white/10 dark:bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-[0_18px_55px_-28px_rgba(0,0,0,0.25)] animate-pulse">
-              <div className="h-6 w-40 bg-white/30 rounded-full mb-3"></div>
-              <div className="h-10 bg-white/20 rounded-xl mb-4"></div>
-              <div className="h-10 bg-white/15 rounded-xl mb-2"></div>
-              <div className="h-10 bg-white/15 rounded-xl"></div>
+            <div className={`dashboard-skeleton ${isDark ? 'dashboard-skeleton-dark' : 'dashboard-skeleton-light'}`}>
+              <div className="skeleton-line skeleton-line-sm"></div>
+              <div className="skeleton-line skeleton-line-lg"></div>
+              <div className="skeleton-line skeleton-line-md"></div>
+              <div className="skeleton-line skeleton-line-md mb-0"></div>
             </div>
           </div>
         </div>
@@ -143,18 +139,14 @@ export default function Dashboard() {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-br relative overflow-hidden ${
-        isDark ? 'from-purple-900 via-violet-900 to-purple-950' : 'from-[#e5e8ff] via-[#ede7ff] to-[#f7e9f6]'
-      }`}
+      className={`dashboard-page ${isDark ? 'dashboard-page-dark' : 'dashboard-page-light'}`}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
       <FloatingCharacters />
       <div
-        className={`relative z-10 min-h-screen flex flex-col max-w-4xl mx-auto transition-transform duration-200 ${
-          isReleasing ? 'ease-out' : 'ease-in'
-        }`}
+        className={`dashboard-content ${isReleasing ? 'ease-out' : 'ease-in'}`}
         style={{ transform: `translateY(${pullOffset}px)` }}
       >
         <Header
@@ -165,30 +157,30 @@ export default function Dashboard() {
           onLogout={logout}
         />
 
-        <main className="flex-1 px-4 pb-10 animate-fade-in flex flex-col items-center justify-center text-center">
-          <div className="max-w-2xl space-y-4">
-            <p className={`text-sm ${isDark ? 'text-white/60' : 'text-slate-600'}`}>Joined {formatDate(user.joinedAt)}</p>
-            <h1 className={`text-4xl font-bold leading-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+        <main className="dashboard-main">
+          <div className="dashboard-container">
+            <p className={`dashboard-date ${isDark ? 'dashboard-date-dark' : 'dashboard-date-light'}`}>Joined {formatDate(user.joinedAt)}</p>
+            <h1 className={`dashboard-title ${isDark ? 'dashboard-title-dark' : 'dashboard-title-light'}`}>
               Welcome back,{' '}
-              <span className="text-pink-500">
+              <span className="dashboard-name-highlight">
                 {fullName.slice(0, nameIndex)}
                 {phase === 'name' && <span className="inline-block animate-blink ml-0.5">|</span>}
               </span>
               !
             </h1>
-            <div className={`text-lg md:text-xl font-semibold min-h-[1.8rem] ${isDark ? 'text-white/90' : 'text-slate-800'}`}>
+            <div className={`dashboard-subtitle ${isDark ? 'dashboard-subtitle-dark' : 'dashboard-subtitle-light'}`}>
               {phase === 'subtitle' && (
                 <span className={`transition-opacity duration-300 ${msgFadeOut ? 'opacity-0' : 'opacity-100'}`}>
                   {(subtitleMessages[msgIndex] || '').slice(0, msgCharIndex)}
-                  <span className="ml-1 text-pink-300 inline-block animate-blink">▍</span>
+                  <span className="cursor-blink animate-blink">▍</span>
                 </span>
               )}
               {phase === 'name' && <span className="opacity-0">placeholder</span>}
             </div>
-            <p className={isDark ? 'text-white/70' : 'text-slate-700'}>
+            <p className={isDark ? 'dashboard-description-dark' : 'dashboard-description'}>
               Manage your profile from the top-right avatar menu. Upload a new photo or sign out anytime.
             </p>
-            <div className="flex items-center justify-center gap-3 pt-4">
+            <div className="dashboard-actions">
               <Button
                 variant="outline"
                 onClick={logout}
@@ -206,15 +198,6 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
-      <style>{`
-        @keyframes blink {
-          0%, 50% { opacity: 1; }
-          50.01%, 100% { opacity: 0; }
-        }
-        .animate-blink {
-          animation: blink 1s step-start infinite;
-        }
-      `}</style>
     </div>
   )
 }

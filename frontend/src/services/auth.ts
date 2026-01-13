@@ -21,4 +21,8 @@ export const authService = {
   async loginWithGoogle(accessToken: string): Promise<AuthResponse> {
     return api.post<AuthResponse>('/auth/google', { accessToken })
   },
+
+  async loginWithFacebook(accessToken: string): Promise<AuthResponse> {
+    return api.post<AuthResponse>('/auth/facebook', { accessToken })
+  },
 }

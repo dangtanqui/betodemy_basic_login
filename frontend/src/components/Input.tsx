@@ -27,10 +27,10 @@ export default function Input({
   const inputType = showPasswordToggle ? (showPassword ? 'text' : 'password') : type
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-slate-700 dark:text-white/80">{label}</label>
-      <div className="relative">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40">
+    <div className="input-wrapper">
+      <label className="input-label">{label}</label>
+      <div className="input-container">
+        <div className="input-icon">
           {icon}
         </div>
         <input
@@ -39,17 +39,13 @@ export default function Input({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          className={`w-full rounded-xl py-3.5 pl-12 pr-12 transition-all focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 ${
-            error ? 'border-red-500' : 'border-slate-200 dark:border-white/10'
-          } ${error ? '' : 'hover:border-purple-400/70'} ${error ? '' : 'dark:hover:border-purple-400/60'} ${
-            disabled ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-slate-50 text-slate-800'
-          } placeholder-slate-400 dark:bg-white/5 dark:text-white dark:placeholder-white/40`}
+          className={`input-field ${error ? 'input-field-error' : ''} ${disabled ? 'input-field-disabled' : ''}`}
         />
         {showPasswordToggle && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40 hover:text-slate-500 dark:hover:text-white/60 transition-colors"
+            className="input-toggle-btn"
           >
             {showPassword ? (
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +75,7 @@ export default function Input({
           </button>
         )}
       </div>
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && <p className="input-error-text">{error}</p>}
     </div>
   )
 }

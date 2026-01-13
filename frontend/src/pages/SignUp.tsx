@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useGoogleLogin } from '@react-oauth/google'
-import { authService } from '../services/auth'
 import Header from '../components/Header'
 import Input from '../components/Input'
 import Button from '../components/Button'
-import SocialButton from '../components/SocialButton'
+import GoogleLoginButton from '../components/GoogleLoginButton'
+import FacebookLoginButton from '../components/FacebookLoginButton'
 import PasswordStrength from '../components/PasswordStrength'
 import FloatingCharacters from '../components/FloatingCharacters'
 import { useTheme } from '../context/ThemeContext'
 
+const hasGoogleClientId = !!import.meta.env.VITE_GOOGLE_CLIENT_ID
+
 export default function SignUp() {
   const navigate = useNavigate()
-  const { register, updateUser } = useAuth()
+  const { register } = useAuth()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -21,32 +22,10 @@ export default function SignUp() {
   const [agreeTerms, setAgreeTerms] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [googleLoading, setGoogleLoading] = useState(false)
   const { isDark } = useTheme()
   const [pullStart, setPullStart] = useState<number | null>(null)
   const [pullOffset, setPullOffset] = useState(0)
   const [isReleasing, setIsReleasing] = useState(false)
-
-  const googleLogin = useGoogleLogin({
-    flow: 'implicit',
-    scope: 'openid email profile',
-    onSuccess: async (tokenResponse) => {
-      try {
-        setGoogleLoading(true)
-        const accessToken = tokenResponse.access_token
-        if (!accessToken) throw new Error('Missing Google access token')
-        const res = await authService.loginWithGoogle(accessToken)
-        localStorage.setItem('token', res.accessToken)
-        updateUser(res.user)
-        navigate('/dashboard')
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Google login failed')
-      } finally {
-        setGoogleLoading(false)
-      }
-    },
-    onError: () => setError('Google login failed'),
-  })
 
   const passwordsMatch = password === confirmPassword
   const isFormValid = fullName && email && password && confirmPassword && passwordsMatch && agreeTerms
@@ -96,41 +75,31 @@ export default function SignUp() {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-br relative overflow-hidden ${
-        isDark ? 'from-purple-900 via-violet-800 to-purple-900' : 'from-[#dfe6ff] via-[#e8e2ff] to-[#f6dff2]'
-      }`}
+      className={`auth-page ${isDark ? 'auth-page-dark' : 'auth-page-light'}`}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
       <FloatingCharacters />
       <div
-        className={`relative z-10 min-h-screen flex flex-col transition-transform duration-200 ${
-          isReleasing ? 'ease-out' : 'ease-in'
-        }`}
+        className={`auth-content ${isReleasing ? 'ease-out' : 'ease-in'}`}
         style={{ transform: `translateY(${pullOffset}px)` }}
       >
-        <div className="w-full max-w-4xl mx-auto px-4 pt-6">
-          <Header />
-        </div>
+        <Header />
 
-        <div className="flex-1 flex items-center justify-center px-4 pb-10">
-          <div className="w-full max-w-md space-y-6">
+        <div className="auth-main">
+          <div className="auth-container">
 
           <main className="px-0">
-            <div
-              className={`rounded-3xl p-6 animate-fade-in shadow-[0_18px_55px_-28px_rgba(0,0,0,0.25)] ${
-                isDark ? 'bg-white/10 backdrop-blur-xl border border-white/10 text-white' : 'bg-white border border-white/50 text-slate-800'
-              }`}
-            >
+            <div className={`auth-card ${isDark ? 'auth-card-dark' : 'auth-card-light'}`}>
               <div className="text-center mb-6">
-                <h1 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>Create Account</h1>
-                <p className={isDark ? 'text-white/60' : 'text-slate-600'}>Join us and start your futuristic journey.</p>
+                <h1 className={`auth-title ${isDark ? 'auth-title-dark' : 'auth-title-light'}`}>Create Account</h1>
+                <p className={isDark ? 'auth-subtitle' : 'auth-subtitle-light'}>Join us and start your futuristic journey.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 {error && (
-                  <div className="bg-red-500/20 border border-red-500/50 rounded-xl p-3 text-red-300 text-sm text-center">
+                  <div className="auth-error">
                     {error}
                   </div>
                 )}
@@ -214,13 +183,29 @@ export default function SignUp() {
                   }
                 />
 
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={agreeTerms}
-                    onChange={(e) => setAgreeTerms(e.target.checked)}
-                    className="w-5 h-5 rounded-md border border-white bg-white text-pink-500 focus:ring-pink-400 focus:ring-offset-0 dark:border-pink-300 dark:bg-white/10"
-                  />
+                <label className="auth-checkbox-label flex items-center gap-3 cursor-pointer">
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={agreeTerms}
+                      onChange={(e) => setAgreeTerms(e.target.checked)}
+                      className="peer sr-only"
+                    />
+                    <div className={`w-5 h-5 rounded-md border-2 transition-all duration-200 flex items-center justify-center ${
+                      isDark 
+                        ? 'border-pink-400/50 bg-white/5 peer-checked:bg-pink-500 peer-checked:border-transparent' 
+                        : 'border-pink-300 bg-white peer-checked:bg-pink-500 peer-checked:border-transparent'
+                    } group-hover:border-pink-400`}>
+                      <svg 
+                        className={`w-3 h-3 text-white transition-opacity duration-200 ${agreeTerms ? 'opacity-100' : 'opacity-0'}`} 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  </div>
                   <span className={`text-sm ${isDark ? 'text-white/70' : 'text-slate-700'}`}>
                     I agree to the{' '}
                     <button type="button" className="text-pink-500 font-semibold hover:text-pink-400">
@@ -234,20 +219,22 @@ export default function SignUp() {
                 </Button>
               </form>
 
-                <div className="my-5 flex items-center">
-                  <div className={`flex-1 border-t ${isDark ? 'border-white/20' : 'border-slate-200'}`}></div>
-                  <span className={`px-4 text-sm ${isDark ? 'text-white/40' : 'text-slate-500'}`}>or continue with</span>
-                  <div className={`flex-1 border-t ${isDark ? 'border-white/20' : 'border-slate-200'}`}></div>
+                <div className="auth-divider my-5">
+                  <div className={`auth-divider-line ${isDark ? 'auth-divider-line-dark' : 'auth-divider-line-light'}`}></div>
+                  <span className={`auth-divider-text ${isDark ? 'auth-divider-text-dark' : 'auth-divider-text-light'}`}>or continue with</span>
+                  <div className={`auth-divider-line ${isDark ? 'auth-divider-line-dark' : 'auth-divider-line-light'}`}></div>
                 </div>
 
-              <div className="space-y-3">
-                <SocialButton provider="google" onClick={() => googleLogin()} loading={googleLoading} />
-                <SocialButton provider="facebook" />
+              <div className="auth-social-buttons">
+                {hasGoogleClientId && (
+                  <GoogleLoginButton onError={setError} rememberMe={true} />
+                )}
+                <FacebookLoginButton onError={setError} rememberMe={true} />
               </div>
 
-              <p className={`text-center mt-5 ${isDark ? 'text-white/60' : 'text-slate-600'}`}>
+              <p className={`auth-footer mt-5 ${isDark ? 'auth-footer-dark' : 'auth-footer-light'}`}>
                 Already have an account?{' '}
-                <Link to="/login" className="text-pink-500 font-semibold hover:text-pink-400 transition-colors">
+                <Link to="/login" className="auth-link">
                   Log In
                 </Link>
               </p>

@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import Dashboard from './pages/Dashboard'
 import NotFound from './pages/NotFound'
+import FacebookCallback from './pages/FacebookCallback'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth()
@@ -68,6 +69,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/auth/facebook/callback" element={<FacebookCallback />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

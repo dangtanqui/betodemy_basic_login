@@ -1,0 +1,39 @@
+/* Input component styles */
+@layer components {
+  .input-wrapper {
+    @apply space-y-2;
+  }
+
+  .input-label {
+    @apply block text-sm font-medium text-slate-700 dark:text-white/80;
+  }
+
+  .input-container {
+    @apply relative;
+  }
+
+  .input-icon {
+    @apply absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-white/40;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl py-3.5 pl-12 pr-12 transition-all focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 border border-slate-200 hover:border-purple-400/70 bg-slate-50 text-slate-800 placeholder-slate-400 dark:border-white/10 dark:hover:border-purple-400/60 dark:bg-white/5 dark:text-white dark:placeholder-white/40;
+  }
+
+  .input-field-error {
+    @apply border-red-500;
+  }
+
+  .input-field-disabled {
+    @apply bg-slate-100 text-slate-400 cursor-not-allowed;
+  }
+
+  .input-toggle-btn {
+    @apply absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-500 transition-colors dark:text-white/40 dark:hover:text-white/60;
+  }
+
+  .input-error-text {
+    @apply text-red-400 text-sm;
+  }
+}
+
