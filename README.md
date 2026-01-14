@@ -72,20 +72,18 @@ npm install
 
 ### 2. Database Setup
 
+Option A: Docker Compose (recommended)
 ```bash
-# Run docker compose
 cd backend
 docker compose up -d
-# View status
 docker compose ps
 # Test connect
 docker exec -it postgres_betodemy psql -U postgres -d betodemy_login_dev
 ```
+> Compose uses Postgres 15, user `postgres`, password `123456`, DB `betodemy_login_dev`, port `5433`.
 
-Make sure PostgreSQL is running, then:
-
+Option B: Manual Postgres
 ```bash
-# Create a database
 psql -U postgres
 CREATE DATABASE betodemy_login_dev;
 \q
@@ -97,7 +95,7 @@ CREATE DATABASE betodemy_login_dev;
 
 ```env
 # Database
-DATABASE_URL="postgresql://postgres:your_password@localhost:5433/betodemy_login_dev?schema=public"
+DATABASE_URL="postgresql://postgres:123456@localhost:5433/betodemy_login_dev?schema=public"
 
 # JWT
 JWT_SECRET="your-super-secret-jwt-key-change-in-production"
@@ -106,7 +104,8 @@ JWT_EXPIRES_IN="7d"
 # Server
 PORT=3000
 
-CROS_ORIGIN=http://localhost:5173,http://localhost:3000
+# CORS (comma separated)
+CORS_ORIGIN=http://localhost:5173,http://localhost:3000
 
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
@@ -118,7 +117,7 @@ FRONTEND_URL=http://localhost:5173
 BACKEND_URL=http://localhost:3000
 ```
 
-**Frontend** - Create `frontend/.env`:
+**Frontend** - Create `frontend/.env` (or `.env.local`):
 
 ```env
 VITE_API_URL=http://localhost:3000
@@ -126,6 +125,7 @@ VITE_API_URL=http://localhost:3000
 VITE_GOOGLE_CLIENT_ID=
 VITE_FACEBOOK_APP_ID=
 ```
+> Frontend ignores `.env.local`, so prefer that for local secrets.
 
 ### 4. Run Database Migrations
 
@@ -162,6 +162,8 @@ npm run dev
 |--------|----------|-------------|------|
 | POST | `/auth/register` | Register new user | No |
 | POST | `/auth/login` | Login user | No |
+| POST | `/auth/google` | Login with Google access token | No |
+| POST | `/auth/facebook` | Login with Facebook access token | No |
 | GET | `/users/me` | Get current user | Yes |
 | POST | `/users/avatar` | Upload avatar | Yes |
 
