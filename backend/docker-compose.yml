@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_betodemy
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: betodemy_login_dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_betodemy_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_betodemy_data:

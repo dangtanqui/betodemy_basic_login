@@ -2,8 +2,6 @@
 
 A full-stack mobile-first authentication system for a Japanese learning platform, built with NestJS and React.
 
-![Login Page](docs/login.png)
-
 ## Tech Stack
 
 ### Backend
@@ -74,6 +72,16 @@ npm install
 
 ### 2. Database Setup
 
+```bash
+# Run docker compose
+cd backend
+docker compose up -d
+# View status
+docker compose ps
+# Test connect
+docker exec -it postgres_betodemy psql -U postgres -d betodemy_login_dev
+```
+
 Make sure PostgreSQL is running, then:
 
 ```bash
@@ -97,12 +105,26 @@ JWT_EXPIRES_IN="7d"
 
 # Server
 PORT=3000
+
+CROS_ORIGIN=http://localhost:5173,http://localhost:3000
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+FACEBOOK_APP_ID=
+FACEBOOK_APP_SECRET=
+
+FRONTEND_URL=http://localhost:5173
+BACKEND_URL=http://localhost:3000
 ```
 
 **Frontend** - Create `frontend/.env`:
 
 ```env
 VITE_API_URL=http://localhost:3000
+
+VITE_GOOGLE_CLIENT_ID=
+VITE_FACEBOOK_APP_ID=
 ```
 
 ### 4. Run Database Migrations
@@ -143,42 +165,6 @@ npm run dev
 | GET | `/users/me` | Get current user | Yes |
 | POST | `/users/avatar` | Upload avatar | Yes |
 
-### Register Request
-
-```json
-POST /auth/register
-{
-  "fullName": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
-}
-```
-
-### Login Request
-
-```json
-POST /auth/login
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
-```
-
-### Response
-
-```json
-{
-  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "uuid",
-    "fullName": "John Doe",
-    "email": "john@example.com",
-    "avatarUrl": null,
-    "joinedAt": "2024-01-15T10:30:00.000Z"
-  }
-}
-```
-
 ## Database Schema
 
 ```prisma
@@ -203,6 +189,8 @@ cd backend
 npx prisma studio
 ```
 
+- Database: http://localhost:5555
+
 ### Build for Production
 
 ```bash
@@ -218,8 +206,3 @@ npm run build
 ## License
 
 MIT
-
-In VS Code/Cursor:
-Press Ctrl+Shift+P
-Type "TypeScript: Restart TS Server"
-Press Enter
